@@ -3,12 +3,12 @@ setlocal
 
 cd /d "%~dp0"
 
-:: ── Architecture (x64 default, pass x86 for 32-bit) ──────────────────────────
+:: Architecture (x64 default, pass x86 for 32-bit)
 set ARCH=x64
 if /i "%1"=="x86" set ARCH=x86
 if /i "%1"=="32"  set ARCH=x86
 
-:: ── Locate VirtualDJ Plugins folder ──────────────────────────────────────────
+:: Locate VirtualDJ Plugins folder
 if "%ARCH%"=="x86" (
     set OUTDIR=%LOCALAPPDATA%\VirtualDJ\Plugins\Generics
 ) else (
@@ -22,7 +22,7 @@ if not exist "%LOCALAPPDATA%\VirtualDJ" (
     )
 )
 
-:: ── Locate MSVC via vswhere ───────────────────────────────────────────────────
+:: Locate MSVC via vswhere
 set VSWHERE="%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 if not exist %VSWHERE% (
     echo ERROR: vswhere.exe not found.
@@ -50,7 +50,7 @@ if errorlevel 1 (
     pause & exit /b 1
 )
 
-:: ── Build ─────────────────────────────────────────────────────────────────────
+:: Build
 echo Building %ARCH%...
 if not exist "%OUTDIR%" mkdir "%OUTDIR%"
 
@@ -61,7 +61,7 @@ if errorlevel 1 (
     pause & exit /b 1
 )
 
-:: ── Install INI ───────────────────────────────────────────────────────────────
+:: Install INI
 if exist "DeckBridge.ini" (
     copy /Y "DeckBridge.ini" "%OUTDIR%\DeckBridge.ini" >nul
     echo Installed: %OUTDIR%\DeckBridge.ini
