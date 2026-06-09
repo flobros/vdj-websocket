@@ -12,19 +12,13 @@ A VirtualDJ 8 plugin that exposes a subscription-based WebSocket server for real
 
 ### Pre-built (recommended)
 
-Download the files for your platform from the [latest release](https://github.com/flobros/vdj-websocket/releases/latest) and copy them to your VirtualDJ Plugins folder:
+Download `NowPlaying.ini` and the binary for your platform from the [latest release](https://github.com/flobros/vdj-websocket/releases/latest). Rename the binary and copy both files to your VirtualDJ Plugins folder:
 
-**Windows**
-```
-%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\
-```
-Files: `NowPlaying.dll` + `NowPlaying.ini`
-
-**macOS**
-```
-~/Library/Application Support/VirtualDJ/Plugins64/Generics/
-```
-Files: `NowPlaying.bundle` + `NowPlaying.ini`
+| Platform | Release file | Rename to | Plugins folder |
+|----------|-------------|-----------|----------------|
+| Windows 64-bit | `NowPlaying_win64.dll` | `NowPlaying.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\` |
+| Windows 32-bit | `NowPlaying_win32.dll` | `NowPlaying.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\Generics\` |
+| macOS (Intel + Apple Silicon) | `NowPlaying_mac.bundle` | `NowPlaying.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/Generics/` |
 
 Open `NowPlaying.ini` and set `AuthToken` to a random secret (see [Configuration](#configuration)), then restart VirtualDJ.
 
@@ -34,18 +28,18 @@ Open `NowPlaying.ini` and set `AuthToken` to a random secret (see [Configuration
 ```bat
 git clone https://github.com/flobros/vdj-websocket
 cd vdj-websocket
-build.bat
+build.bat        :: 64-bit (default)
+build.bat x86    :: 32-bit
 ```
-`build.bat` auto-detects Visual Studio via `vswhere.exe` and installs directly to the VDJ Plugins folder. Pass a custom path as the first argument if VDJ is installed elsewhere:
-```bat
-build.bat "C:\custom\path\VirtualDJ\Plugins64\Generics"
-```
+`build.bat` auto-detects Visual Studio via `vswhere.exe` and installs directly to the correct VDJ Plugins folder for the chosen architecture.
 
 **macOS**
 ```sh
 git clone https://github.com/flobros/vdj-websocket
 cd vdj-websocket
-make install
+make install          # universal binary (Intel + Apple Silicon)
+make intel install    # Intel only
+make arm install      # Apple Silicon only
 ```
 
 ## Configuration

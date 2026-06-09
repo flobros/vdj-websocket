@@ -3,16 +3,23 @@ setlocal
 
 cd /d "%~dp0"
 
-:: ── Locate VirtualDJ Plugins64 folder ────────────────────────────────────────
-:: Try %LOCALAPPDATA%\VirtualDJ first, then Documents\VirtualDJ
-set OUTDIR=%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics
-if not exist "%LOCALAPPDATA%\VirtualDJ" (
-    set OUTDIR=%USERPROFILE%\Documents\VirtualDJ\Plugins64\Generics
-)
+:: ── Architecture (x64 default, pass x86 for 32-bit) ──────────────────────────
+set ARCH=x64
+if /i "%1"=="x86" set ARCH=x86
+if /i "%1"=="32"  set ARCH=x86
 
-:: Allow explicit override: build.bat OUTDIR=C:\some\path
-if not "%1"=="" (
-    set OUTDIR=%~1
+:: ── Locate VirtualDJ Plugins folder ──────────────────────────────────────────
+if "%ARCH%"=="x86" (
+    set OUTDIR=%LOCALAPPDATA%\VirtualDJ\Plugins\Generics
+) else (
+    set OUTDIR=%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics
+)
+if not exist "%LOCALAPPDATA%\VirtualDJ" (
+    if "%ARCH%"=="x86" (
+        set OUTDIR=%USERPROFILE%\Documents\VirtualDJ\Plugins\Generics
+    ) else (
+        set OUTDIR=%USERPROFILE%\Documents\VirtualDJ\Plugins64\Generics
+    )
 )
 
 :: ── Locate MSVC via vswhere ───────────────────────────────────────────────────
@@ -30,7 +37,12 @@ if "%VS_PATH%"=="" (
     pause & exit /b 1
 )
 
-set VCVARS=%VS_PATH%\VC\Auxiliary\Build\vcvars64.bat
+if "%ARCH%"=="x86" (
+    set VCVARS=%VS_PATH%\VC\Auxiliary\Build\vcvars32.bat
+) else (
+    set VCVARS=%VS_PATH%\VC\Auxiliary\Build\vcvars64.bat
+)
+
 call "%VCVARS%"
 if errorlevel 1 (
     echo ERROR: Could not initialize MSVC environment from:
@@ -39,6 +51,7 @@ if errorlevel 1 (
 )
 
 :: ── Build ─────────────────────────────────────────────────────────────────────
+echo Building %ARCH%...
 if not exist "%OUTDIR%" mkdir "%OUTDIR%"
 
 cl /nologo /O2 /W3 /EHsc /LD /I sdk NowPlaying.cpp /Fe:"%OUTDIR%\NowPlaying.dll" /link /DLL
@@ -57,7 +70,7 @@ if exist "NowPlaying.ini" (
 )
 
 echo.
-echo BUILD SUCCESS
+echo BUILD SUCCESS [%ARCH%]
 echo Installed: %OUTDIR%\NowPlaying.dll
 echo Restart VirtualDJ to load the plugin.
 pause
