@@ -54,7 +54,7 @@ if errorlevel 1 (
 echo Building %ARCH%...
 if not exist "%OUTDIR%" mkdir "%OUTDIR%"
 
-cl /nologo /O2 /W3 /EHsc /LD /I sdk NowPlaying.cpp /Fe:"%OUTDIR%\NowPlaying.dll" /link /DLL
+cl /nologo /O2 /W3 /EHsc /LD /I sdk DeckBridge.cpp /Fe:"%OUTDIR%\DeckBridge.dll" /link /DLL
 if errorlevel 1 (
     echo.
     echo BUILD FAILED
@@ -62,15 +62,15 @@ if errorlevel 1 (
 )
 
 :: ── Install INI ───────────────────────────────────────────────────────────────
-if exist "NowPlaying.ini" (
-    copy /Y "NowPlaying.ini" "%OUTDIR%\NowPlaying.ini" >nul
-    echo Installed: %OUTDIR%\NowPlaying.ini
+if exist "DeckBridge.ini" (
+    copy /Y "DeckBridge.ini" "%OUTDIR%\DeckBridge.ini" >nul
+    echo Installed: %OUTDIR%\DeckBridge.ini
 ) else (
-    echo NOTE: NowPlaying.ini not found - plugin will use built-in defaults ^(no auth^)
+    echo NOTE: DeckBridge.ini not found - plugin will use built-in defaults ^(no auth^)
 )
 
 echo.
 echo BUILD SUCCESS [%ARCH%]
-echo Installed: %OUTDIR%\NowPlaying.dll
+echo Installed: %OUTDIR%\DeckBridge.dll
 echo Restart VirtualDJ to load the plugin.
 pause

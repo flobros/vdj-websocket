@@ -1,4 +1,4 @@
-// NowPlaying.cpp  –  VirtualDJ General plugin  v4.1
+// DeckBridge.cpp  –  VirtualDJ General plugin  v4.1
 //
 // Subscription-based WebSocket server.  Windows + macOS.
 //
@@ -9,8 +9,8 @@
 //   Plugin → Client (every 100ms):
 //     {"deck 1 get_pos":0.7534,"deck 1 get_title":"Song Name",...}
 //
-// Config (NowPlaying.ini next to the plugin file):
-//   [NowPlaying]
+// Config (DeckBridge.ini next to the plugin file):
+//   [DeckBridge]
 //   Port=9001
 //   AllowedOrigins=*
 //   AllowedVerbs=get_title,get_artist,...
@@ -416,15 +416,15 @@ public:
         char selfDir[512]={};
         get_self_dir(selfDir,sizeof(selfDir));
         char iniPath[600]={};
-        snprintf(iniPath,sizeof(iniPath),"%sNowPlaying.ini",selfDir);
+        snprintf(iniPath,sizeof(iniPath),"%sDeckBridge.ini",selfDir);
 
-        g_port = ini_get_int(iniPath,"NowPlaying","Port",9001);
-        ini_get_string(iniPath,"NowPlaying","AllowedOrigins","*",
+        g_port = ini_get_int(iniPath,"DeckBridge","Port",9001);
+        ini_get_string(iniPath,"DeckBridge","AllowedOrigins","*",
                        g_allowedOrigins,sizeof(g_allowedOrigins));
-        ini_get_string(iniPath,"NowPlaying","AuthToken","",
+        ini_get_string(iniPath,"DeckBridge","AuthToken","",
                        g_authToken,sizeof(g_authToken));
         char verbsStr[4096]={};
-        ini_get_string(iniPath,"NowPlaying","AllowedVerbs",DEFAULT_VERBS,
+        ini_get_string(iniPath,"DeckBridge","AllowedVerbs",DEFAULT_VERBS,
                        verbsStr,sizeof(verbsStr));
         parse_verb_list(verbsStr);
 
@@ -439,7 +439,7 @@ public:
 
     HRESULT VDJ_API OnGetPluginInfo(TVdjPluginInfo8 *info) override
     {
-        info->PluginName  = "NowPlaying";
+        info->PluginName  = "DeckBridge";
         info->Author      = "audioforward";
         info->Description = "Subscription WebSocket server";
         info->Version     = "4.1";

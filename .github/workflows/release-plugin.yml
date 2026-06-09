@@ -15,12 +15,12 @@ jobs:
         with:
           arch: x64
       - name: Build
-        run: cl /nologo /O2 /W3 /EHsc /LD /I sdk NowPlaying.cpp /Fe:NowPlaying.dll /link /DLL
+        run: cl /nologo /O2 /W3 /EHsc /LD /I sdk DeckBridge.cpp /Fe:DeckBridge.dll /link /DLL
       - name: Stage
         run: |
           mkdir dist
-          copy NowPlaying.dll dist\NowPlaying.dll
-          copy NowPlaying.ini dist\NowPlaying.ini
+          copy DeckBridge.dll dist\DeckBridge.dll
+          copy DeckBridge.ini dist\DeckBridge.ini
       - uses: actions/upload-artifact@v4
         with:
           name: win64
@@ -34,12 +34,12 @@ jobs:
         with:
           arch: x86
       - name: Build
-        run: cl /nologo /O2 /W3 /EHsc /LD /I sdk NowPlaying.cpp /Fe:NowPlaying.dll /link /DLL
+        run: cl /nologo /O2 /W3 /EHsc /LD /I sdk DeckBridge.cpp /Fe:DeckBridge.dll /link /DLL
       - name: Stage
         run: |
           mkdir dist
-          copy NowPlaying.dll dist\NowPlaying.dll
-          copy NowPlaying.ini dist\NowPlaying.ini
+          copy DeckBridge.dll dist\DeckBridge.dll
+          copy DeckBridge.ini dist\DeckBridge.ini
       - uses: actions/upload-artifact@v4
         with:
           name: win32
@@ -50,16 +50,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Intel slice
-        run: clang++ -O2 -Wall -fPIC -std=c++11 -bundle -arch x86_64 -I sdk NowPlaying.cpp -o NowPlaying_x86_64.bundle
+        run: clang++ -O2 -Wall -fPIC -std=c++11 -bundle -arch x86_64 -I sdk DeckBridge.cpp -o DeckBridge_x86_64.bundle
       - name: Build ARM slice
-        run: clang++ -O2 -Wall -fPIC -std=c++11 -bundle -arch arm64  -I sdk NowPlaying.cpp -o NowPlaying_arm64.bundle
+        run: clang++ -O2 -Wall -fPIC -std=c++11 -bundle -arch arm64  -I sdk DeckBridge.cpp -o DeckBridge_arm64.bundle
       - name: Combine into Universal Binary
-        run: lipo -create NowPlaying_x86_64.bundle NowPlaying_arm64.bundle -output NowPlaying.bundle
+        run: lipo -create DeckBridge_x86_64.bundle DeckBridge_arm64.bundle -output DeckBridge.bundle
       - name: Stage
         run: |
           mkdir dist
-          cp NowPlaying.bundle dist/NowPlaying.bundle
-          cp NowPlaying.ini    dist/NowPlaying.ini
+          cp DeckBridge.bundle dist/DeckBridge.bundle
+          cp DeckBridge.ini    dist/DeckBridge.ini
       - uses: actions/upload-artifact@v4
         with:
           name: mac-universal
@@ -79,29 +79,29 @@ jobs:
 
       - name: Rename for release
         run: |
-          cp dist/win64/NowPlaying.dll dist/NowPlaying_win64.dll
-          cp dist/win32/NowPlaying.dll dist/NowPlaying_win32.dll
-          cp dist/mac/NowPlaying.bundle dist/NowPlaying_mac.bundle
-          cp dist/win64/NowPlaying.ini  dist/NowPlaying.ini
+          cp dist/win64/DeckBridge.dll dist/DeckBridge_win64.dll
+          cp dist/win32/DeckBridge.dll dist/DeckBridge_win32.dll
+          cp dist/mac/DeckBridge.bundle dist/DeckBridge_mac.bundle
+          cp dist/win64/DeckBridge.ini  dist/DeckBridge.ini
 
       - uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/NowPlaying_win64.dll
-            dist/NowPlaying_win32.dll
-            dist/NowPlaying_mac.bundle
-            dist/NowPlaying.ini
+            dist/DeckBridge_win64.dll
+            dist/DeckBridge_win32.dll
+            dist/DeckBridge_mac.bundle
+            dist/DeckBridge.ini
           body: |
             ## Installation
 
-            Download `NowPlaying.ini` and the file for your platform, rename it to `NowPlaying.dll` / `NowPlaying.bundle`, and copy both to your VirtualDJ Plugins folder.
+            Download `DeckBridge.ini` and the file for your platform, rename it to `DeckBridge.dll` / `DeckBridge.bundle`, and copy both to your VirtualDJ Plugins folder.
 
             | Platform | File | Plugins folder |
             |----------|------|----------------|
-            | Windows 64-bit | `NowPlaying_win64.dll` → `NowPlaying.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\` |
-            | Windows 32-bit | `NowPlaying_win32.dll` → `NowPlaying.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\Generics\` |
-            | macOS (Intel + Apple Silicon) | `NowPlaying_mac.bundle` → `NowPlaying.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/Generics/` |
+            | Windows 64-bit | `DeckBridge_win64.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\` |
+            | Windows 32-bit | `DeckBridge_win32.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\Generics\` |
+            | macOS (Intel + Apple Silicon) | `DeckBridge_mac.bundle` → `DeckBridge.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/Generics/` |
 
-            Open `NowPlaying.ini`, set `AuthToken` to a random secret, then restart VirtualDJ.
+            Open `DeckBridge.ini`, set `AuthToken` to a random secret, then restart VirtualDJ.
 
             See the [README](https://github.com/${{ github.repository }}/blob/main/README.md) for full documentation.
