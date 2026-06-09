@@ -107,7 +107,7 @@ static void get_self_dir(char *out, int outSize)
         char path[512] = {};
         GetModuleFileName(hm, path, sizeof(path));
         char *sep = strrchr(path, '\\');
-        if (sep) { sep[1] = '\0'; strncpy(out, path, outSize - 1); }
+        if (sep) { sep[1] = '\0'; strncpy_s(out, outSize, path, _TRUNCATE); }
     }
 #else
     Dl_info info;
