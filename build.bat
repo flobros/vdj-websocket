@@ -64,6 +64,8 @@ if errorlevel 1 (
     pause & exit /b 1
 )
 
+del /f /q DeckBridge.obj >nul 2>nul
+
 :: Install INI
 if exist "DeckBridge.ini" (
     copy /Y "DeckBridge.ini" "!OUTDIR!\DeckBridge.ini" >nul
