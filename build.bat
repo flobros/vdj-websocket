@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 
 cd /d "%~dp0"
 
@@ -9,55 +9,55 @@ if /i "%1"=="x86" set ARCH=x86
 if /i "%1"=="32"  set ARCH=x86
 
 :: Locate VirtualDJ Plugins folder
-if "%ARCH%"=="x86" (
-    set OUTDIR=%LOCALAPPDATA%\VirtualDJ\Plugins\Generics
+if "!ARCH!"=="x86" (
+    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins\Generics
 ) else (
-    set OUTDIR=%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics
+    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins64\Generics
 )
-if not exist "%LOCALAPPDATA%\VirtualDJ" (
-    if "%ARCH%"=="x86" (
-        set OUTDIR=%USERPROFILE%\Documents\VirtualDJ\Plugins\Generics
+if not exist "!LOCALAPPDATA!\VirtualDJ" (
+    if "!ARCH!"=="x86" (
+        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins\Generics
     ) else (
-        set OUTDIR=%USERPROFILE%\Documents\VirtualDJ\Plugins64\Generics
+        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins64\Generics
     )
 )
 
 :: Locate MSVC via vswhere
 set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
-if not exist "%VSWHERE%" (
+if not exist "!VSWHERE!" (
     echo ERROR: vswhere.exe not found.
     echo Install Visual Studio 2019 or later with the "Desktop development with C++" workload.
     pause & exit /b 1
 )
 
-"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath > "%TEMP%\deckbridge_vs.txt" 2>nul
-for /f "usebackq delims=" %%i in ("%TEMP%\deckbridge_vs.txt") do set VS_PATH=%%i
-del "%TEMP%\deckbridge_vs.txt" >nul 2>nul
+"!VSWHERE!" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath > "!TEMP!\deckbridge_vs.txt" 2>nul
+for /f "usebackq delims=" %%i in ("!TEMP!\deckbridge_vs.txt") do set VS_PATH=%%i
+del "!TEMP!\deckbridge_vs.txt" >nul 2>nul
 
-if "%VS_PATH%"=="" (
+if "!VS_PATH!"=="" (
     echo ERROR: No Visual Studio installation with C++ tools found.
     echo Install the "Desktop development with C++" workload in Visual Studio Installer.
     pause & exit /b 1
 )
 
-if "%ARCH%"=="x86" (
-    set VCVARS=%VS_PATH%\VC\Auxiliary\Build\vcvars32.bat
+if "!ARCH!"=="x86" (
+    set "VCVARS=!VS_PATH!\VC\Auxiliary\Build\vcvars32.bat"
 ) else (
-    set VCVARS=%VS_PATH%\VC\Auxiliary\Build\vcvars64.bat
+    set "VCVARS=!VS_PATH!\VC\Auxiliary\Build\vcvars64.bat"
 )
 
-call "%VCVARS%"
+call "!VCVARS!"
 if errorlevel 1 (
     echo ERROR: Could not initialize MSVC environment from:
-    echo   %VCVARS%
+    echo   !VCVARS!
     pause & exit /b 1
 )
 
 :: Build
-echo Building %ARCH%...
-if not exist "%OUTDIR%" mkdir "%OUTDIR%"
+echo Building !ARCH!...
+if not exist "!OUTDIR!" mkdir "!OUTDIR!"
 
-cl /nologo /O2 /W3 /EHsc /LD /I sdk DeckBridge.cpp /Fe:"%OUTDIR%\DeckBridge.dll" /link /DLL
+cl /nologo /O2 /W3 /EHsc /LD /I sdk DeckBridge.cpp /Fe:"!OUTDIR!\DeckBridge.dll" /link /DLL
 if errorlevel 1 (
     echo.
     echo BUILD FAILED
@@ -66,14 +66,14 @@ if errorlevel 1 (
 
 :: Install INI
 if exist "DeckBridge.ini" (
-    copy /Y "DeckBridge.ini" "%OUTDIR%\DeckBridge.ini" >nul
-    echo Installed: %OUTDIR%\DeckBridge.ini
+    copy /Y "DeckBridge.ini" "!OUTDIR!\DeckBridge.ini" >nul
+    echo Installed: !OUTDIR!\DeckBridge.ini
 ) else (
     echo NOTE: DeckBridge.ini not found - plugin will use built-in defaults ^(no auth^)
 )
 
 echo.
-echo BUILD SUCCESS [%ARCH%]
-echo Installed: %OUTDIR%\DeckBridge.dll
+echo BUILD SUCCESS [!ARCH!]
+echo Installed: !OUTDIR!\DeckBridge.dll
 echo Restart VirtualDJ to load the plugin.
 pause
