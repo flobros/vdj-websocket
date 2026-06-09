@@ -150,7 +150,9 @@ Time values (`get_time "elapsed"` / `get_time "remain"`) are in **milliseconds**
 
 ### Supported VDJ verbs
 
-Any VDJ verb that works with `GetInfo` (numeric) or `GetStringInfo` (string) in the [VDJScript reference](https://www.virtualdj.com/wiki/VDJscript.html) can be subscribed to, subject to the `AllowedVerbs` whitelist.
+Any VDJ verb that works with `GetInfo` (numeric) or `GetStringInfo` (string) can be subscribed to. The full list of available verbs is in the [VirtualDJ VDJScript verb reference](https://virtualdj.com/manuals/virtualdj/appendix/vdjscriptverbs.html).
+
+> **Remember:** any verb you want to use must also be added to `AllowedVerbs` in `DeckBridge.ini`, otherwise the plugin will silently drop it.
 
 Common useful verbs:
 
