@@ -8,47 +8,87 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            output: NowPlaying.dll
+            build: |
+              cl /nologo /O2 /W3 /EHsc /LD /I sdk NowPlaying.cpp /Fe:NowPlaying.dll /link /DLL
+          - os: macos-latest
+            output: NowPlaying.bundle
+            build: |
+              clang++ -O2 -Wall -fPIC -std=c++11 -bundle -I sdk NowPlaying.cpp -o NowPlaying.bundle
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up MSVC
+      - name: Set up MSVC (Windows only)
+        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
 
-      - name: Build DLL
-        run: |
-          cl /nologo /O2 /W3 /EHsc /LD /I sdk NowPlaying.cpp /Fe:NowPlaying.dll /link /DLL
+      - name: Build
+        run: ${{ matrix.build }}
 
       - name: Collect artifacts
+        shell: bash
         run: |
           mkdir dist
-          copy NowPlaying.dll dist\NowPlaying.dll
-          copy NowPlaying.ini dist\NowPlaying.ini
+          cp "${{ matrix.output }}" dist/
+          cp NowPlaying.ini dist/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: NowPlaying-plugin
+          name: NowPlaying-${{ runner.os }}
           path: dist/
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: NowPlaying-Windows
+          path: dist/windows
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: NowPlaying-macOS
+          path: dist/macos
+
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/NowPlaying.dll
-            dist/NowPlaying.ini
+            dist/windows/NowPlaying.dll
+            dist/windows/NowPlaying.ini
+            dist/macos/NowPlaying.bundle
           body: |
             ## Installation
 
-            1. Copy `NowPlaying.dll` and `NowPlaying.ini` to your VirtualDJ Plugins64\Generics folder:
-               ```
-               %LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\
-               ```
-            2. Open `NowPlaying.ini` and set `AuthToken` to a random secret.
-            3. Restart VirtualDJ.
+            ### Windows
+            Copy `NowPlaying.dll` and `NowPlaying.ini` to:
+            ```
+            %LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\
+            ```
+
+            ### macOS
+            Copy `NowPlaying.bundle` and `NowPlaying.ini` to:
+            ```
+            ~/Library/Application Support/VirtualDJ/Plugins64/Generics/
+            ```
+
+            Open `NowPlaying.ini` and set `AuthToken` to a random secret, then restart VirtualDJ.
 
             See the [README](https://github.com/${{ github.repository }}/blob/main/README.md) for full documentation.

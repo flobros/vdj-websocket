@@ -4,33 +4,48 @@ A VirtualDJ 8 plugin that exposes a subscription-based WebSocket server for real
 
 ## Requirements
 
-- VirtualDJ 8 or later (64-bit, Windows)
-- Visual Studio 2019+ with **Desktop development with C++** workload (to build from source)
+- VirtualDJ 8 or later (64-bit)
+- **Windows**: Visual Studio 2019+ with **Desktop development with C++** workload (to build from source)
+- **macOS**: Xcode Command Line Tools — `xcode-select --install` (to build from source)
 
 ## Installation
 
 ### Pre-built (recommended)
 
-1. Download `NowPlaying.dll` and `NowPlaying.ini` from the [latest release](https://github.com/flobros/vdj-websocket/releases/latest).
-2. Copy both files to your VirtualDJ Plugins folder:
-   ```
-   %LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\
-   ```
-3. Open `NowPlaying.ini` and set `AuthToken` to a random secret (see [Configuration](#configuration)).
-4. Restart VirtualDJ. The plugin loads automatically.
+Download the files for your platform from the [latest release](https://github.com/flobros/vdj-websocket/releases/latest) and copy them to your VirtualDJ Plugins folder:
+
+**Windows**
+```
+%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\
+```
+Files: `NowPlaying.dll` + `NowPlaying.ini`
+
+**macOS**
+```
+~/Library/Application Support/VirtualDJ/Plugins64/Generics/
+```
+Files: `NowPlaying.bundle` + `NowPlaying.ini`
+
+Open `NowPlaying.ini` and set `AuthToken` to a random secret (see [Configuration](#configuration)), then restart VirtualDJ.
 
 ### Build from source
 
+**Windows**
 ```bat
 git clone https://github.com/flobros/vdj-websocket
 cd vdj-websocket
 build.bat
 ```
-
-`build.bat` auto-detects Visual Studio via `vswhere.exe` and installs the DLL + config directly to your VDJ Plugins folder. If VDJ is in a non-standard location, pass the target path as the first argument:
-
+`build.bat` auto-detects Visual Studio via `vswhere.exe` and installs directly to the VDJ Plugins folder. Pass a custom path as the first argument if VDJ is installed elsewhere:
 ```bat
 build.bat "C:\custom\path\VirtualDJ\Plugins64\Generics"
+```
+
+**macOS**
+```sh
+git clone https://github.com/flobros/vdj-websocket
+cd vdj-websocket
+make install
 ```
 
 ## Configuration
