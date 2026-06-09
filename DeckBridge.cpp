@@ -30,7 +30,11 @@
   #include <bcrypt.h>
   #pragma comment(lib, "ws2_32.lib")
   #pragma comment(lib, "bcrypt.lib")
-  #pragma comment(linker, "/EXPORT:DllGetClassObject,PRIVATE")
+  #ifdef _WIN64
+    #pragma comment(linker, "/EXPORT:DllGetClassObject,PRIVATE")
+  #else
+    #pragma comment(linker, "/EXPORT:DllGetClassObject=_DllGetClassObject@12,PRIVATE")
+  #endif
 #else
   #include <sys/socket.h>
   #include <netinet/in.h>
