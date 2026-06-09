@@ -11,22 +11,18 @@ A VirtualDJ 8 plugin that exposes a subscription-based WebSocket server for real
 
 ### Pre-built (recommended)
 
-1. Download `NowPlaying.dll` and `NowPlaying.ini.example` from the [latest release](../../releases/latest).
+1. Download `NowPlaying.dll` and `NowPlaying.ini` from the [latest release](https://github.com/flobros/vdj-websocket/releases/latest).
 2. Copy both files to your VirtualDJ Plugins folder:
    ```
    %LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\
    ```
-   or
-   ```
-   %USERPROFILE%\Documents\VirtualDJ\Plugins64\Generics\
-   ```
-3. Rename `NowPlaying.ini.example` → `NowPlaying.ini` and edit it (see [Configuration](#configuration)).
+3. Open `NowPlaying.ini` and set `AuthToken` to a random secret (see [Configuration](#configuration)).
 4. Restart VirtualDJ. The plugin loads automatically.
 
 ### Build from source
 
 ```bat
-git clone https://github.com/yourname/vdj-websocket
+git clone https://github.com/flobros/vdj-websocket
 cd vdj-websocket
 build.bat
 ```
@@ -39,7 +35,7 @@ build.bat "C:\custom\path\VirtualDJ\Plugins64\Generics"
 
 ## Configuration
 
-Copy `NowPlaying.ini.example` to `NowPlaying.ini` in the same folder as the DLL:
+Edit `NowPlaying.ini` in the same folder as the DLL:
 
 ```ini
 [NowPlaying]
@@ -48,20 +44,22 @@ Copy `NowPlaying.ini.example` to `NowPlaying.ini` in the same folder as the DLL:
 Port=9001
 
 ; Comma-separated allowed Origin headers, or * to allow any.
-; For public exposure, restrict to your frontend domain:
+; For public use, restrict to your frontend domain:
 ;   AllowedOrigins=https://mysite.com
 AllowedOrigins=*
 
-; Auth token — clients must send this in their subscribe message.
-; Leave empty to disable auth (safe for local-only use).
-AuthToken=change_this_to_something_random
+; Auth token — clients must include this in their subscribe message.
+; Change this to a random secret before exposing the plugin publicly.
+AuthToken=audioforward-local
 
 ; Comma-separated VDJ verb stems clients are allowed to subscribe to.
-; "deck N " prefix is stripped before matching.
+; "deck N " prefix is stripped before matching, so "get_title" covers
+; both "deck 1 get_title" and "deck 2 get_title".
+; Remove any verbs you don't want exposed.
 AllowedVerbs=get_title,get_artist,get_remix_after_title,get_key,get_bpm,get_time "elapsed",get_time "remain",get_level,get_volume,eq_high,eq_mid,eq_low,filter,play,crossfader,get_pos
 ```
 
-**For public / internet-facing use**, always set `AuthToken` to a random secret and restrict `AllowedOrigins` to your frontend domain.
+**For public / internet-facing use**, always set `AuthToken` to a strong random secret and restrict `AllowedOrigins` to your frontend domain.
 
 ## Wire Protocol
 
@@ -135,8 +133,7 @@ The plugin sends a full snapshot of all subscribed values every 100 ms:
   "deck 1 get_time \"remain\"": 186200,
   "deck 1 get_title": "Track Name",
   "deck 1 get_artist": "Artist",
-  "crossfader": 0.5,
-  ...
+  "crossfader": 0.5
 }
 ```
 

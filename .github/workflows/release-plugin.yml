@@ -10,10 +10,6 @@ jobs:
   build:
     runs-on: windows-latest
 
-    defaults:
-      run:
-        working-directory: vdj_websocket
-
     steps:
       - uses: actions/checkout@v4
 
@@ -30,26 +26,29 @@ jobs:
         run: |
           mkdir dist
           copy NowPlaying.dll dist\NowPlaying.dll
-          copy NowPlaying.ini.example dist\NowPlaying.ini.example
+          copy NowPlaying.ini dist\NowPlaying.ini
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: NowPlaying-plugin
-          path: vdj_websocket/dist/
+          path: dist/
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            vdj_websocket/dist/NowPlaying.dll
-            vdj_websocket/dist/NowPlaying.ini.example
+            dist/NowPlaying.dll
+            dist/NowPlaying.ini
           body: |
             ## Installation
 
-            1. Copy `NowPlaying.dll` and `NowPlaying.ini.example` to your VirtualDJ Plugins64\Generics folder.
-            2. Rename `NowPlaying.ini.example` → `NowPlaying.ini` and set your `AuthToken`.
+            1. Copy `NowPlaying.dll` and `NowPlaying.ini` to your VirtualDJ Plugins64\Generics folder:
+               ```
+               %LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\
+               ```
+            2. Open `NowPlaying.ini` and set `AuthToken` to a random secret.
             3. Restart VirtualDJ.
 
-            See [README](https://github.com/${{ github.repository }}/blob/main/vdj_websocket/README.md) for full documentation.
+            See the [README](https://github.com/${{ github.repository }}/blob/main/README.md) for full documentation.

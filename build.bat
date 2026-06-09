@@ -53,13 +53,7 @@ if exist "NowPlaying.ini" (
     copy /Y "NowPlaying.ini" "%OUTDIR%\NowPlaying.ini" >nul
     echo Installed: %OUTDIR%\NowPlaying.ini
 ) else (
-    if not exist "%OUTDIR%\NowPlaying.ini" (
-        copy /Y "NowPlaying.ini.example" "%OUTDIR%\NowPlaying.ini" >nul
-        echo Installed default config: %OUTDIR%\NowPlaying.ini
-        echo Edit it to set AuthToken and AllowedOrigins before exposing publicly.
-    ) else (
-        echo NOTE: NowPlaying.ini not found locally - keeping existing config in %OUTDIR%
-    )
+    echo NOTE: NowPlaying.ini not found - plugin will use built-in defaults ^(no auth^)
 )
 
 echo.
