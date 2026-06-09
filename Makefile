@@ -2,7 +2,7 @@
 
 CXX      = clang++
 CXXFLAGS = -O2 -Wall -fPIC -std=c++11 -I sdk
-OUTDIR   = $(HOME)/Library/Application Support/VirtualDJ/Plugins64/Generics
+OUTDIR   = $(HOME)/Library/Application Support/VirtualDJ/Plugins64/SoundEffects
 
 # Default: universal binary (Intel + Apple Silicon)
 all: DeckBridge.bundle
@@ -32,7 +32,7 @@ install: DeckBridge.bundle
 		echo "NOTE: DeckBridge.ini not found - plugin will use built-in defaults (no auth)"; \
 	fi
 	@echo "Installed: $(OUTDIR)/DeckBridge.bundle"
-	@echo "Restart VirtualDJ to load the plugin."
+	@echo "Restart VirtualDJ, then enable DeckBridge once via Effects > Sound Effects."
 
 clean:
 	rm -f DeckBridge.bundle DeckBridge_x86_64.bundle DeckBridge_arm64.bundle

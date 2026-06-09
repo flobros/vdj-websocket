@@ -98,10 +98,12 @@ jobs:
 
             | Platform | File | Plugins folder |
             |----------|------|----------------|
-            | Windows 64-bit | `DeckBridge_win64.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\Generics\` |
-            | Windows 32-bit | `DeckBridge_win32.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\Generics\` |
-            | macOS (Intel + Apple Silicon) | `DeckBridge_mac.bundle` → `DeckBridge.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/Generics/` |
+            | Windows 64-bit | `DeckBridge_win64.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\SoundEffects\` |
+            | Windows 32-bit | `DeckBridge_win32.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\SoundEffects\` |
+            | macOS (Intel + Apple Silicon) | `DeckBridge_mac.bundle` → `DeckBridge.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/SoundEffects/` |
 
             Open `DeckBridge.ini`, set `AuthToken` to a random secret, then restart VirtualDJ.
+
+            **One-time activation:** In VirtualDJ, open the Effects panel, go to the **Sound Effects** tab, find DeckBridge and click it to enable it. VirtualDJ will auto-start the plugin on every future launch.
 
             See the [README](https://github.com/${{ github.repository }}/blob/main/README.md) for full documentation.

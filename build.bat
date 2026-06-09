@@ -10,15 +10,15 @@ if /i "%1"=="32"  set ARCH=x86
 
 :: Locate VirtualDJ Plugins folder
 if "!ARCH!"=="x86" (
-    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins\Generics
+    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins\SoundEffects
 ) else (
-    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins64\Generics
+    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins64\SoundEffects
 )
 if not exist "!LOCALAPPDATA!\VirtualDJ" (
     if "!ARCH!"=="x86" (
-        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins\Generics
+        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins\SoundEffects
     ) else (
-        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins64\Generics
+        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins64\SoundEffects
     )
 )
 
@@ -77,5 +77,8 @@ if exist "DeckBridge.ini" (
 echo.
 echo BUILD SUCCESS [!ARCH!]
 echo Installed: !OUTDIR!\DeckBridge.dll
-echo Restart VirtualDJ to load the plugin.
+echo.
+echo FIRST TIME SETUP: Restart VirtualDJ, then open the Effects panel,
+echo go to the Sound Effects tab, and click DeckBridge to enable it.
+echo VirtualDJ will remember this and auto-start the plugin on every launch.
 pause
