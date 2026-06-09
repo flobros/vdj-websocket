@@ -105,11 +105,11 @@ static void get_self_dir(char *out, int outSize)
     out[0] = '\0';
 #ifdef _WIN32
     HMODULE hm = NULL;
-    if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
-                          GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                          (LPCSTR)&get_self_dir, &hm)) {
+    if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+                           GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                           (LPCSTR)&get_self_dir, &hm)) {
         char path[512] = {};
-        GetModuleFileName(hm, path, sizeof(path));
+        GetModuleFileNameA(hm, path, sizeof(path));
         char *sep = strrchr(path, '\\');
         if (sep) { sep[1] = '\0'; strncpy_s(out, outSize, path, _TRUNCATE); }
     }
