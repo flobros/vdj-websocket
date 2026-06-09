@@ -117,9 +117,9 @@ static void get_self_dir(char *out, int outSize)
     Dl_info info;
     if (dladdr((void *)&get_self_dir, &info) && info.dli_fname) {
         char path[512] = {};
-        strncpy(path, info.dli_fname, sizeof(path) - 1);
+        snprintf(path, sizeof(path), "%s", info.dli_fname);
         char *sep = strrchr(path, '/');
-        if (sep) { sep[1] = '\0'; strncpy(out, path, outSize - 1); }
+        if (sep) { sep[1] = '\0'; snprintf(out, outSize, "%s", path); }
     }
 #endif
 }
@@ -134,8 +134,7 @@ static void get_self_dir(char *out, int outSize)
 static void ini_get_string(const char *path, const char *sec, const char *key,
                             const char *def, char *out, int outSize)
 {
-    strncpy(out, def ? def : "", outSize - 1);
-    out[outSize - 1] = '\0';
+    snprintf(out, outSize, "%s", def ? def : "");
     FILE *f = fopen(path, "r");
     if (!f) return;
     char line[1024];
@@ -156,7 +155,7 @@ static void ini_get_string(const char *path, const char *sec, const char *key,
         if (strcmp(line,key)!=0) continue;
         char *val = eq+1;
         while (*val==' ') val++;
-        strncpy(out, val, outSize-1); out[outSize-1]='\0';
+        snprintf(out, outSize, "%s", val);
         break;
     }
     fclose(f);
