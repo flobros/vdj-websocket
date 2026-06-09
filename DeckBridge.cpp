@@ -48,7 +48,7 @@
 #endif
 
 #define MAX_CLIENTS   16
-#define POLL_MS       100
+#define POLL_MS_DEFAULT 100
 #define MAX_QUERY_LEN 96
 #define MAX_QUERIES   40
 #define MAX_VERBS     64
@@ -173,6 +173,7 @@ static char g_allowedOrigins[1024]  = "*";
 static char g_authToken[256]        = "";
 static char g_verbs[MAX_VERBS][MAX_QUERY_LEN];
 static int  g_nVerbs                = 0;
+static int  g_pollMs                = POLL_MS_DEFAULT;
 
 static const char *DEFAULT_VERBS =
     "get_title,get_artist,get_remix_after_title,get_key,get_bpm,"
@@ -428,6 +429,9 @@ public:
                        verbsStr,sizeof(verbsStr));
         parse_verb_list(verbsStr);
 
+        g_pollMs = ini_get_int(iniPath,"DeckBridge","Interval",POLL_MS_DEFAULT);
+        if (g_pollMs < 10) g_pollMs = 10;
+
         running=true;
 #ifdef _WIN32
         hThread=CreateThread(NULL,0,ThreadProc,this,0,NULL);
@@ -543,7 +547,7 @@ private:
         unsigned int lastPoll=0;
         while(running){
             unsigned int now=ticks_ms();
-            if(now-lastPoll>=POLL_MS){
+            if(now-lastPoll>=(unsigned int)g_pollMs){
                 lastPoll=now;
                 char legacyJson[4096]={}; bool legacyBuilt=false;
                 for(int i=0;i<nClients;i++){

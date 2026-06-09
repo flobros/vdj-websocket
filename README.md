@@ -52,6 +52,10 @@ Edit `DeckBridge.ini` in the same folder as the DLL:
 ; WebSocket port (default: 9001)
 Port=9001
 
+; How often the plugin sends an update to connected clients, in milliseconds.
+; Lower = smoother animations, higher CPU. Minimum enforced: 10ms.
+Interval=100
+
 ; Comma-separated allowed Origin headers, or * to allow any.
 ; For public use, restrict to your frontend domain:
 ;   AllowedOrigins=https://mysite.com
