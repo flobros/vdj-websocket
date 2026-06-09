@@ -23,14 +23,17 @@ if not exist "%LOCALAPPDATA%\VirtualDJ" (
 )
 
 :: Locate MSVC via vswhere
-set VSWHERE="%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
-if not exist %VSWHERE% (
+set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+if not exist "%VSWHERE%" (
     echo ERROR: vswhere.exe not found.
     echo Install Visual Studio 2019 or later with the "Desktop development with C++" workload.
     pause & exit /b 1
 )
 
-for /f "usebackq delims=" %%i in (`%VSWHERE% -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set VS_PATH=%%i
+"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath > "%TEMP%\deckbridge_vs.txt" 2>nul
+for /f "usebackq delims=" %%i in ("%TEMP%\deckbridge_vs.txt") do set VS_PATH=%%i
+del "%TEMP%\deckbridge_vs.txt" >nul 2>nul
+
 if "%VS_PATH%"=="" (
     echo ERROR: No Visual Studio installation with C++ tools found.
     echo Install the "Desktop development with C++" workload in Visual Studio Installer.
