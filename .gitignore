@@ -1,0 +1,5 @@
+NowPlaying.ini
+*.obj
+*.exp
+*.lib
+dist/

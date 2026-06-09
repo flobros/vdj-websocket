@@ -1,0 +1,23 @@
+[NowPlaying]
+
+; WebSocket port (default: 9001)
+Port=9001
+
+; Comma-separated allowed Origin headers, or * to allow any.
+; Set to your frontend domain when exposing publicly, e.g.:
+;   AllowedOrigins=https://mysite.com
+AllowedOrigins=*
+
+; Optional auth token. If non-empty, clients must include "token":"<value>"
+; in their subscribe message. Leave empty for local/trusted use.
+;   AuthToken=change_this_to_something_random
+AuthToken=
+
+; Comma-separated verbs that clients are allowed to subscribe to.
+; "deck N " prefix is stripped before matching, so "get_title" covers
+; both "deck 1 get_title" and "deck 2 get_title".
+;
+; Remove any verbs you don't want exposed publicly.
+; Sensitive verbs NOT included by default: get_filepath, get_vdj_folder,
+;   get_browsed_song, get_browsed_filepath, get_loaded_song
+AllowedVerbs=get_title,get_artist,get_remix_after_title,get_key,get_bpm,get_time "elapsed",get_time "remain",get_level,get_volume,eq_high,eq_mid,eq_low,filter,play,crossfader,get_pos
