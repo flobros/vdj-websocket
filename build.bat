@@ -30,7 +30,7 @@ if not exist %VSWHERE% (
     pause & exit /b 1
 )
 
-for /f "usebackq delims=" %%i in (`%VSWHERE% -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set VS_PATH=%%i
+for /f "usebackq delims=" %%i in (`%VSWHERE% -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set VS_PATH=%%i
 if "%VS_PATH%"=="" (
     echo ERROR: No Visual Studio installation with C++ tools found.
     echo Install the "Desktop development with C++" workload in Visual Studio Installer.
