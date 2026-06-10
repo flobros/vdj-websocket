@@ -59,6 +59,15 @@ Edit `DeckBridge.ini` in the same folder as the DLL:
 ; WebSocket port (default: 9001)
 Port=9001
 
+; IP address to bind the WebSocket server to.
+; 127.0.0.1 = localhost only (default, safe for local use)
+; 0.0.0.0   = all interfaces (required when a reverse proxy on another
+;              machine, e.g. a Raspberry Pi running nginx, needs to reach it)
+BindHost=127.0.0.1
+
+; Maximum number of simultaneous WebSocket clients (1–16, default: 16)
+MaxClients=16
+
 ; How often the plugin sends an update to connected clients, in milliseconds.
 ; Lower = smoother animations, higher CPU. Minimum enforced: 10ms.
 Interval=100
@@ -186,12 +195,13 @@ Common useful verbs:
 
 ## Security
 
-The plugin listens on `localhost` only — it is **not** accessible from the network unless you port-forward. For remote access:
+By default (`BindHost=127.0.0.1`) the plugin is only reachable from the same machine — not accessible from the network. If you set `BindHost=0.0.0.0` for a reverse-proxy setup, also:
 
-- Always set a strong `AuthToken`
-- Restrict `AllowedOrigins` to your specific frontend domain
+- Set a strong `AuthToken`
+- Restrict `AllowedOrigins` to your frontend domain
 - Limit `AllowedVerbs` to only what your client needs
 - Avoid exposing verbs that reveal file paths (`get_filepath`, `get_vdj_folder`, etc.)
+- Let the proxy handle TLS — never expose port 9001 directly to the internet
 
 ## License
 
