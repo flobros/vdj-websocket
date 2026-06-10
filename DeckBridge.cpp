@@ -1,4 +1,4 @@
-// DeckBridge.cpp  –  VirtualDJ General plugin  v4.1
+// DeckBridge.cpp  –  VirtualDJ General plugin  v4.2
 //
 // Subscription-based WebSocket server.  Windows + macOS.
 //
@@ -172,6 +172,8 @@ static int ini_get_int(const char *path, const char *sec, const char *key, int d
 
 // ─── Runtime config ───────────────────────────────────────────────────────────
 static int  g_port                  = 9001;
+static char g_bindHost[64]          = "127.0.0.1";
+static int  g_maxClients            = 16;
 static char g_allowedOrigins[1024]  = "*";
 static char g_authToken[256]        = "";
 static char g_verbs[MAX_VERBS][MAX_QUERY_LEN];
@@ -423,6 +425,11 @@ public:
         snprintf(iniPath,sizeof(iniPath),"%sDeckBridge.ini",selfDir);
 
         g_port = ini_get_int(iniPath,"DeckBridge","Port",9001);
+        ini_get_string(iniPath,"DeckBridge","BindHost","127.0.0.1",
+                       g_bindHost,sizeof(g_bindHost));
+        g_maxClients = ini_get_int(iniPath,"DeckBridge","MaxClients",16);
+        if (g_maxClients < 1)  g_maxClients = 1;
+        if (g_maxClients > MAX_CLIENTS) g_maxClients = MAX_CLIENTS;
         ini_get_string(iniPath,"DeckBridge","AllowedOrigins","*",
                        g_allowedOrigins,sizeof(g_allowedOrigins));
         ini_get_string(iniPath,"DeckBridge","AuthToken","",
@@ -449,7 +456,7 @@ public:
         info->PluginName  = "DeckBridge";
         info->Author      = "audioforward";
         info->Description = "Subscription WebSocket server";
-        info->Version     = "4.1";
+        info->Version     = "4.2";
         info->Bitmap      = NULL;
         info->Flags       = VDJFLAG_NODOCK;
         return S_OK;
@@ -530,7 +537,7 @@ private:
 
         struct sockaddr_in addr={};
         addr.sin_family=AF_INET;
-        addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+        addr.sin_addr.s_addr=inet_addr(g_bindHost);
         addr.sin_port=htons((unsigned short)g_port);
 
         if(bind(srv,(sockaddr*)&addr,sizeof(addr))!=0||listen(srv,5)!=0){
@@ -543,7 +550,7 @@ private:
         set_nonblocking(srv,true);
 
         Client clients[MAX_CLIENTS]; int nClients=0;
-        for(int i=0;i<MAX_CLIENTS;i++){
+        for(int i=0;i<g_maxClients;i++){
             clients[i].sock=INVALID_SOCKET;clients[i].nQueries=0;clients[i].subscribed=false;
         }
 
@@ -579,7 +586,7 @@ private:
                 if(ws_handshake(newSock)){
                     set_nonblocking(newSock,true);
                     bool added=false;
-                    for(int i=0;i<MAX_CLIENTS;i++){
+                    for(int i=0;i<g_maxClients;i++){
                         if(clients[i].sock==INVALID_SOCKET){
                             clients[i].sock=newSock;clients[i].nQueries=0;clients[i].subscribed=false;
                             if(i>=nClients)nClients=i+1;
