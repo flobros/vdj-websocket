@@ -16,9 +16,9 @@ Download `DeckBridge.ini` and the binary for your platform from the [latest rele
 
 | Platform | Release file | Rename to | Plugins folder |
 |----------|-------------|-----------|----------------|
-| Windows 64-bit | `DeckBridge_win64.dll` | `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\SoundEffects\` |
-| Windows 32-bit | `DeckBridge_win32.dll` | `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\SoundEffects\` |
-| macOS (Intel + Apple Silicon) | `DeckBridge_mac.bundle` | `DeckBridge.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/SoundEffects/` |
+| Windows 64-bit | `DeckBridge_win64.dll` | `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\SoundEffect\` |
+| Windows 32-bit | `DeckBridge_win32.dll` | `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\SoundEffect\` |
+| macOS (Intel + Apple Silicon) | `DeckBridge_mac.bundle` | `DeckBridge.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/SoundEffect/` |
 
 Open `DeckBridge.ini` and set `AuthToken` to a random secret (see [Configuration](#configuration)).
 
@@ -38,7 +38,7 @@ cd vdj-websocket
 build.bat        :: 64-bit (default)
 build.bat x86    :: 32-bit
 ```
-`build.bat` auto-detects Visual Studio via `vswhere.exe` and installs directly to the `SoundEffects` Plugins folder for the chosen architecture. After the first build, follow the one-time activation step above.
+`build.bat` auto-detects Visual Studio via `vswhere.exe` and installs directly to the `SoundEffect` Plugins folder for the chosen architecture. After the first build, follow the one-time activation step above.
 
 **macOS**
 ```sh

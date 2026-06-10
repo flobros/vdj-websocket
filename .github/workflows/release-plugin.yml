@@ -98,9 +98,9 @@ jobs:
 
             | Platform | File | Plugins folder |
             |----------|------|----------------|
-            | Windows 64-bit | `DeckBridge_win64.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\SoundEffects\` |
-            | Windows 32-bit | `DeckBridge_win32.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\SoundEffects\` |
-            | macOS (Intel + Apple Silicon) | `DeckBridge_mac.bundle` → `DeckBridge.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/SoundEffects/` |
+            | Windows 64-bit | `DeckBridge_win64.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins64\SoundEffect\` |
+            | Windows 32-bit | `DeckBridge_win32.dll` → `DeckBridge.dll` | `%LOCALAPPDATA%\VirtualDJ\Plugins\SoundEffect\` |
+            | macOS (Intel + Apple Silicon) | `DeckBridge_mac.bundle` → `DeckBridge.bundle` | `~/Library/Application Support/VirtualDJ/Plugins64/SoundEffect/` |
 
             Open `DeckBridge.ini`, set `AuthToken` to a random secret, then restart VirtualDJ.
 

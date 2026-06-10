@@ -10,15 +10,15 @@ if /i "%1"=="32"  set ARCH=x86
 
 :: Locate VirtualDJ Plugins folder
 if "!ARCH!"=="x86" (
-    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins\SoundEffects
+    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins\SoundEffect
 ) else (
-    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins64\SoundEffects
+    set OUTDIR=!LOCALAPPDATA!\VirtualDJ\Plugins64\SoundEffect
 )
 if not exist "!LOCALAPPDATA!\VirtualDJ" (
     if "!ARCH!"=="x86" (
-        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins\SoundEffects
+        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins\SoundEffect
     ) else (
-        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins64\SoundEffects
+        set OUTDIR=!USERPROFILE!\Documents\VirtualDJ\Plugins64\SoundEffect
     )
 )
 

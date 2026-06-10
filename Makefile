@@ -2,7 +2,7 @@
 
 CXX      = clang++
 CXXFLAGS = -O2 -Wall -fPIC -std=c++11 -I sdk
-OUTDIR   = $(HOME)/Library/Application Support/VirtualDJ/Plugins64/SoundEffects
+OUTDIR   = $(HOME)/Library/Application Support/VirtualDJ/Plugins64/SoundEffect
 
 # Default: universal binary (Intel + Apple Silicon)
 all: DeckBridge.bundle
